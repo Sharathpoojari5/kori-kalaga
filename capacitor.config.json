@@ -1,0 +1,11 @@
+{
+  "appId": "com.korikalaga.app",
+  "appName": "Kori Kalaga",
+  "webDir": "www",
+  "backgroundColor": "#17122a",
+  "android": { "allowMixedContent": false },
+  "plugins": {
+    "SplashScreen": { "launchShowDuration": 1200, "launchAutoHide": true, "backgroundColor": "#1B1030", "showSpinner": false },
+    "StatusBar": { "style": "DARK", "backgroundColor": "#17122a" }
+  }
+}

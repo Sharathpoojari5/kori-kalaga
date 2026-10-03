@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Kori Kalaga</string>
+    <string name="title_activity_main">Kori Kalaga</string>
+    <string name="package_name">com.korikalaga.app</string>
+    <string name="custom_url_scheme">com.korikalaga.app</string>
+</resources>

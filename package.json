@@ -1,0 +1,23 @@
+{
+  "name": "kori-kalaga",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Kori Kalaga: a village rooster game for Android and iOS (no gambling, no real-money prizes)",
+  "scripts": {
+    "game": "cp source/base.html src/game.html && python3 source/patch_3d.py src/game.html",
+    "build": "npm run game && node scripts/build-www.js",
+    "sync": "npm run build && npx cap sync",
+    "android": "npm run sync && npx cap open android",
+    "ios": "npm run sync && npx cap open ios"
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.5.2",
+    "@capacitor/app": "^8.1.2",
+    "@capacitor/cli": "^8.5.2",
+    "@capacitor/core": "^8.5.2",
+    "@capacitor/ios": "^8.5.2",
+    "@capacitor/splash-screen": "^8.0.2",
+    "@capacitor/status-bar": "^8.0.4",
+    "three": "0.159.0"
+  }
+}
