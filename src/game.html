@@ -506,18 +506,18 @@ const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 // ---------- Game data ----------
 const BREEDS = {
-  kempu:{name:'Kempu', desc:'Red. Hits hardest and leaves rivals rattled, tires sooner.', pow:8, spd:5, bal:5, sta:90, tell:.8, sig:'rattle', sigText:'Rattle: a clean hit rattles the rival, costing it 3 spirit on each of the next 2 calls.',
+  kempu:{name:'Kempu', desc:'Red. Hits hardest and leaves rivals rattled, tires sooner.', pow:7.5, spd:5, bal:5, sta:90, tell:.55, sig:'rattle', sigText:'Rattle: a clean hit rattles the rival, costing it 3 spirit on each of the next 2 calls.',
     col:{body:'#141418', wing:'#3a1a0e', neck:'#df8420', tail:'#09171a', tail2:'#12342f', hi:'#2a2830', lo:'#060608', sheen:'#2f9a80', leg:'#919ca8', legD:'#626c77', neckHi:'#f7b64c', saddle:'#d2701a'}},
-  kari:{name:'Kari', desc:'Black. Steady, hard to read, and bites back when hit.', pow:6, spd:6, bal:8, sta:100, tell:.58, sig:'counter', sigText:'Counter-peck: when it loses a call, 25% chance to hit back for 40% of the damage.',
+  kari:{name:'Kari', desc:'Black. Steady, hard to read, and bites back when hit.', pow:6.5, spd:6, bal:8, sta:100, tell:.45, sig:'counter', sigText:'Counter-peck: when it loses a call, 25% chance to hit back for 40% of the damage.',
     col:{body:'#232329', wing:'#16161b', neck:'#474b57', tail:'#0d2b3b', tail2:'#1d4d63', hi:'#3a3a44', lo:'#101014', sheen:'#2a7a96', leg:'#7f8672', legD:'#555b4c', neckHi:'#6a7080', saddle:'#4a4f5e'}},
-  bili:{name:'Bili', desc:'White. Quick, slippery and light on its feet.', pow:6, spd:9, bal:5, sta:105, tell:.8, sig:'evade', sigText:'Evasion: 20% chance to slip a losing call and take no damage, while it has stamina.',
+  bili:{name:'Bili', desc:'White. Quick, slippery and light on its feet.', pow:6, spd:9, bal:5, sta:105, tell:.55, sig:'evade', sigText:'Evasion: 20% chance to slip a losing call and take no damage, while it has stamina.',
     col:{body:'#ece6d6', wing:'#d2c9b3', neck:'#f7f2e6', tail:'#cbbfa4', tail2:'#e6dcc6', hi:'#fffaf0', lo:'#c9bfa6', sheen:'#e8dcc0', leg:'#d8b86a', legD:'#a08a44', neckHi:'#ffffff', saddle:'#fffaf0'}}
 };
 const BLADES = {
-  short:{name:'Short katti', desc:'Quick and reliable. Small boost to speed.', adv:'Steady: wins speed trades and rarely wears out', dmg:1.0, counter:1.1, spd:1, cost:0, len:14, curve:false, fee:5, wear:6},
-  curved:{name:'Curved katti', desc:'Built for counters. Dodge & hit back lands much harder.', adv:'Counters: Dodge & hit back hits 45% harder', dmg:1.08, counter:1.45, spd:0, cost:180, len:19, curve:true, fee:20, wear:9},
+  short:{name:'Short katti', desc:'Quick and reliable. Small boost to speed.', adv:'Steady: wins speed trades and rarely wears out', dmg:1.06, counter:1.15, spd:1, cost:0, len:14, curve:false, fee:5, wear:6},
+  curved:{name:'Curved katti', desc:'Built for counters. Dodge & hit back lands much harder.', adv:'Counters: Dodge & hit back hits 30% harder', dmg:1.08, counter:1.3, spd:0, cost:180, len:19, curve:true, fee:20, wear:9},
   long:{name:'Long katti', desc:'Hardest strikes, but the bird is slower.', adv:'Power: every strike +30%, but slower', dmg:1.3, counter:.9, spd:-2, cost:250, len:27, curve:false, fee:30, wear:12},
-  slim:{name:'Slim katti', desc:'Razor-thin and light. Fast and sharp, but chips and comes loose easily.', adv:'Sharp and fast, but fragile', dmg:1.16, counter:1.15, spd:1, cost:220, len:22, curve:false, slim:true, fee:15, wear:17}
+  slim:{name:'Slim katti', desc:'Razor-thin and light. Fast and sharp, but chips and comes loose easily.', adv:'Sharp and fast, but fragile', dmg:1.2, counter:1.15, spd:1, cost:220, len:22, curve:false, slim:true, fee:15, wear:17}
 };
 // ---------- Individual looks: every kori is a little different ----------
 function strHash(str){ let h = 2166136261; for (let i=0;i<str.length;i++) h = Math.imul(h ^ str.charCodeAt(i), 16777619); return h >>> 0; }
@@ -534,7 +534,7 @@ const sizeLbl = L => L.size < .95 ? 'Light' : L.size > 1.05 ? 'Heavy' : 'Medium'
 const looksLine = e => { const L = lookOf(e); return `${sizeLbl(L)} ${kgOf(L)} kg · ${PATTERNS[L.pat]}`; };
 const STYLES = {
   aggressive:{name:'Aggressive', desc:'More damage, burns stamina fast. Defaults to Jump attack.', dmg:1.15, drain:1.2, taken:1.05, def:'jump', w:{jump:.46, block:.24, dodge:.30}},
-  balanced:{name:'Balanced', desc:'No strengths, no weaknesses. Defaults to Block.', dmg:1, drain:1, taken:1, def:'block', w:{jump:.34, block:.33, dodge:.33}},
+  balanced:{name:'Balanced', desc:'A little of everything: slightly harder hits, slightly less damage taken. Defaults to Block.', dmg:1.04, drain:1, taken:.96, def:'block', w:{jump:.34, block:.33, dodge:.33}},
   defensive:{name:'Defensive', desc:'Takes less damage, hits softer. Defaults to Dodge.', dmg:.9, drain:.85, taken:.85, def:'dodge', w:{jump:.22, block:.40, dodge:.38}}
 };
 const RIBBONS = {
@@ -4694,7 +4694,8 @@ async function startFight(){
       const om = aiPick(fight.o, fight.p);
       let acc = fight.o.breed.tell - clamp((fight.o.level-1)*.015, 0, .1) - ((fight.follow||0) >= 2 ? .15 : 0) - (venue().rule === 'lights' ? .1 : 0);
       acc = clamp(acc, .35, .9);
-      const bluff = Math.random() >= acc, tell = bluff ? pick(Object.keys(MOVES).filter(m => m !== om)) : om;
+      const bluff = Math.random() >= acc, smart = bluff && (fight.follow||0) >= 2;   // once you keep trusting the tell, its bluffs are aimed at you
+      const tell = !bluff ? om : smart ? Object.keys(MOVES).find(t => Object.keys(MOVES).find(x => MOVES[x].beats === t) === MOVES[om].beats) : pick(Object.keys(MOVES).filter(m => m !== om));
       fight.p.anim.target = fight.o.anim.target = 1;
       await tip(1, 'Step 2 of 3, the call. Jump beats Block, Block beats Dodge, Dodge beats Jump. Your rival shows a tell for its next move, but sometimes it is a feint. Smart handlers bluff more once they see you trusting the tell.'); if (F !== fight) return;
       fight.tell = tell;
