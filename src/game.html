@@ -598,7 +598,7 @@ const persist = () => { try { localStorage.setItem(SAVE_KEY, JSON.stringify(save
 function showTop(){ $('#coinCount').textContent = save.coins; $('#dayNum').textContent = save.day; }
 
 // ---------- Bird maths ----------
-const xpNeed = lv => 40 + 20*(lv-1);
+const xpNeed = lv => Math.round(50*Math.pow(lv, 1.4)/10)*10;   // 50, 130, 230, 350, 480, 610, 760, 920, 1080: about 85 fights to level 10
 function statsOf(e){
   const b = BREEDS[e.breed], lv = e.level-1, sz = lookOf(e).size - 1;
   return {pow:b.pow + e.tr.pow + lv*.25 + sz*6, spd:b.spd + e.tr.spd + lv*.15 - sz*5, bal:b.bal + e.tr.bal + lv*.15, staMax:b.sta + e.tr.sta + lv*3, spiritMax:100 + lv*4};
