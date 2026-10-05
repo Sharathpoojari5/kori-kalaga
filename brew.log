@@ -1,0 +1,86 @@
+==> Auto-updating Homebrew...
+Adjust how often this is run with `$HOMEBREW_AUTO_UPDATE_SECS` or disable with
+`$HOMEBREW_NO_AUTO_UPDATE=1`. Hide these hints with `$HOMEBREW_NO_ENV_HINTS=1` (see `man brew`).
+==> Auto-updated Homebrew!
+Updated 3 taps (anomalyco/tap, homebrew/core and homebrew/cask).
+==> New Formulae
+all-smi: GPU monitoring tool for NVIDIA/Jetson/Apple Silicon/Tenstorrent
+apkid: Android application identifier for compilers, packers, and obfuscators
+chisel-ubuntu: Carve and cut Debian packages into slices
+ctcache: Cache for clang-tidy static analysis results
+goleft: Tools for coverage and QC of BAM/CRAM files, including indexcov
+mariadb@12.3: Drop-in replacement for MySQL
+morphe: Desktop app and CLI for patching Android apps with Morphe
+pypy3.12: Implementation of Python 3 in Python
+regenie: Whole genome regression modelling of large genome-wide association studies
+sniffles: Structural variant caller for long-read sequencing data
+vcfexpress: Filter and format VCF/BCF files with Lua expressions
+zig@0.16: Programming language designed for robustness, optimality, and clarity
+==> New Casks
+argo-books: Accounting software for small businesses
+font-lexica-ultralegible
+keyecho: Mechanical keyboard sounds for every keystroke
+picsart-ai-playground: Workspace for AI image, video and audio creation
+sandisk: Managing SanDisk external drives
+sdrmm-app: Modular, client-server software-defined radio
+swiftcord: Native Discord client
+
+You have 31 outdated formulae installed.
+
+==> Downloading bottle manifests
+✔︎ Bottle Manifest ffmpeg (9.0.2)
+==> Would install 1 formula:
+ffmpeg 9.0.2
+==> Would install 4 dependencies for ffmpeg:
+libvpx
+svt-av1
+x264
+x265
+==> Would upgrade 5 dependencies for ffmpeg:
+libvmaf
+ca-certificates
+openssl@3
+sdl3
+sdl2-compat
+==> Fetching downloads for: ffmpeg
+✔︎ Bottle Manifest libvmaf (3.2.1)
+✔︎ Bottle Manifest libvpx (1.17.0)
+✔︎ Bottle Manifest ca-certificates (2026-09-25)
+✔︎ Bottle Manifest x264 (r3222)
+✔︎ Bottle Manifest x265 (4.3)
+✔︎ Bottle Manifest openssl@3 (3.6.5)
+✔︎ Bottle Manifest svt-av1 (4.2.0)
+✔︎ Bottle Manifest sdl3 (3.4.18)
+✔︎ Bottle Manifest sdl2-compat (2.32.74)
+✔︎ Bottle ca-certificates (2026-09-25)
+✔︎ Bottle sdl2-compat (2.32.74)
+✔︎ Bottle libvmaf (3.2.1)
+✔︎ Bottle svt-av1 (4.2.0)
+✔︎ Bottle sdl3 (3.4.18)
+✔︎ Bottle libvpx (1.17.0)
+✔︎ Bottle x264 (r3222)
+✔︎ Bottle x265 (4.3)
+✔︎ Bottle openssl@3 (3.6.5)
+✔︎ Bottle ffmpeg (9.0.2)
+==> Installing dependencies for ffmpeg: libvmaf, libvpx, svt-av1, x264 and x265
+==> Upgrading ffmpeg dependency: libvmaf
+==> Pouring libvmaf--3.2.1.arm64_tahoe.bottle.tar.gz
+🍺  /opt/homebrew/Cellar/libvmaf/3.2.1: 243 files, 8.2MB
+==> Installing ffmpeg dependency: libvpx
+==> Pouring libvpx--1.17.0.arm64_tahoe.bottle.1.tar.gz
+🍺  /opt/homebrew/Cellar/libvpx/1.17.0: 22 files, 4.4MB
+==> Installing ffmpeg dependency: svt-av1
+==> Pouring svt-av1--4.2.0.arm64_tahoe.bottle.tar.gz
+🍺  /opt/homebrew/Cellar/svt-av1/4.2.0: 23 files, 3.3MB
+==> Installing ffmpeg dependency: x264
+==> Pouring x264--r3222.arm64_tahoe.bottle.tar.gz
+🍺  /opt/homebrew/Cellar/x264/r3222: 12 files, 4.4MB
+==> Installing ffmpeg dependency: x265
+==> Pouring x265--4.3.arm64_tahoe.bottle.1.tar.gz
+🍺  /opt/homebrew/Cellar/x265/4.3: 12 files, 17.3MB
+==> Installing ffmpeg
+==> Pouring ffmpeg--9.0.2.arm64_tahoe.bottle.tar.gz
+🍺  /opt/homebrew/Cellar/ffmpeg/9.0.2: 290 files, 53.9MB
+==> Caveats
+==> ffmpeg
+ffmpeg-full includes additional tools and libraries that are not included in the regular ffmpeg formula.

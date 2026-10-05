@@ -1,0 +1,131 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Origin</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+Kannada:wght@700;800&display=swap" rel="stylesheet">
+<style>
+html,body{margin:0;background:#000;overflow:hidden}
+#stage{position:absolute;left:0;top:0;width:1080px;height:1920px;transform-origin:0 0;background:#050302;overflow:hidden}
+.shot{position:absolute;inset:0;overflow:hidden;opacity:0}
+.shot img{position:absolute;left:50%;top:50%;transform-origin:50% 50%;will-change:transform;filter:contrast(1.12) saturate(1.12) sepia(.22) brightness(.96)}
+#core{position:absolute;left:0;top:0;width:1080px;height:1920px}
+#vig{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 48%,rgba(0,0,0,0) 42%,rgba(0,0,0,.72) 100%);pointer-events:none}
+#grade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,120,30,.10),rgba(120,30,0,.18));mix-blend-mode:soft-light;pointer-events:none}
+#grain{position:absolute;left:-20px;top:-20px;width:1120px;height:1960px;opacity:.10;mix-blend-mode:overlay;pointer-events:none}
+#flash{position:absolute;inset:0;background:#ffe6b0;opacity:0;pointer-events:none}
+#bar1,#bar2{position:absolute;left:0;right:0;height:0;background:#000}
+#bar1{top:0}#bar2{bottom:0}
+#frame{position:absolute;inset:44px;border:2px solid rgba(240,190,90,.55);pointer-events:none;opacity:0}
+.cap{position:absolute;left:0;right:0;text-align:center;opacity:0;pointer-events:none}
+.cap .k{font:800 150px/1.05 'Noto Sans Kannada',sans-serif;color:#ffd98a;text-shadow:0 0 40px rgba(255,140,30,.65),0 6px 0 rgba(60,20,0,.8)}
+.cap .e{font:400 84px/1 'Bebas Neue',sans-serif;letter-spacing:22px;color:#fff2d6;margin-top:6px;text-shadow:0 4px 18px rgba(0,0,0,.8)}
+.cap .s{font:400 46px/1.2 'Bebas Neue',sans-serif;letter-spacing:12px;color:#ffc46b;margin-top:18px;text-shadow:0 3px 12px rgba(0,0,0,.9)}
+</style></head><body>
+<div id="stage">
+  <canvas id="core" width="540" height="960"></canvas>
+  <div id="shots"></div>
+  <div id="grade"></div><div id="scrim" style="position:absolute;left:0;right:0;bottom:0;height:880px;background:linear-gradient(180deg,rgba(0,0,0,0),rgba(0,0,0,.6))"></div><div id="vig"></div><canvas id="grain" width="270" height="480"></canvas>
+  <div id="frame"></div>
+  <div id="caps"></div>
+  <div id="flash"></div><div id="bar1"></div><div id="bar2"></div>
+</div>
+<script>
+const S = (img,t0,t1,kb,o)=>Object.assign({img,t0,t1,kb},o||{});
+const SHOTS = [
+ S(171,3.2,5.5,[1.15,1.3,-.5,.5,-.9,-.9],{fade:.5}),
+ S(84,5.5,7.0,[1.12,1.3,.7,-.7,0,0]),
+ S(138,7.0,8.0,[1.1,1.35,0,0,.8,-.8]),
+ S(87,8.0,9.5,[1.12,1.3,-.7,.7,0,0]),
+ S(94,9.5,10.5,[1.1,1.3,.8,-.8,0,0]),
+ S(88,10.5,12.0,[1.1,1.3,0,0,-.8,-.8]),
+ S(25,12.0,12.5,[1.1,1.3,0,0,-.5,.2]),
+ S(38,12.5,13.0,[1.05,1.25,0,0,.3,-.3]),
+ S(69,13.0,13.5,[1.2,1.35,-.5,.5,0,0]),
+ S(63,13.5,14.0,[1.2,1.4,.6,-.4,0,0]),
+ S(133,14.0,14.5,[1.2,1.35,.2,-.5,0,0]),
+ S(122,14.5,15.0,[1.2,1.4,-.5,.4,0,0]),
+ S(40,15.0,15.5,[1.2,1.35,.2,-.2,0,0]),
+ S(28,15.5,16.0,[1.05,1.25,0,0,.5,-.3]),
+ S(147,16.0,16.5,[1.05,1.25,0,0,.4,-.4]),
+ S(86,16.5,17.0,[1.25,1.4,.3,-.3,0,0]),
+ S(3,17.0,17.5,[1.2,1.4,-.5,.5,0,0]),
+ S(4,17.5,18.0,[1.2,1.4,.5,-.5,0,0]),
+ S(22,18.0,18.5,[1.2,1.4,-.5,.3,0,0]),
+ S(12,18.5,19.0,[1.2,1.4,.5,-.2,0,0]),
+ S(181,19.0,20.4,[1.3,1.8,.2,-.1,-.9,-.5],{fade:.2}),
+ S(180,20.4,21.2,[1.05,1.25,0,0,.3,-.2]),
+];
+const CAPS = [
+ {t0:4.3,t1:7.6,k:'ನೆಲ',e:'THE LAND',s:'WESTERN GHATS · PADDY · MONSOON',y:1180},
+ {t0:8.3,t1:11.6,k:'ಕಡಲು',e:'THE SEA',s:'KARAVALI · THE COAST OF KARNATAKA',y:1180},
+ {t0:12.0,t1:15.9,k:'ಕಲೆ',e:'THE ARTS',s:'YAKSHAGANA · PILI VESHA · DOLLU',y:1180},
+ {t0:16.0,t1:20.2,k:'ಹಬ್ಬ',e:'THE FESTIVAL',s:'KAMBALA · THE VILLAGE · THE RING',y:1180},
+];
+const shots = document.getElementById('shots');
+for (const s of SHOTS) { const d = document.createElement('div'); d.className='shot'; const im = new Image(); im.src='../pics/'+s.img+'.jpg'; d.appendChild(im); shots.appendChild(d); s.el=d; s.im=im; }
+const capsEl = document.getElementById('caps');
+for (const c of CAPS) { const d=document.createElement('div'); d.className='cap'; d.style.top=c.y+'px'; d.innerHTML='<div class="k">'+c.k+'</div><div class="e">'+c.e+'</div><div class="s">'+c.s+'</div>'; capsEl.appendChild(d); c.el=d; }
+const T0 = document.createElement('div'); T0.className='cap'; T0.style.top='1040px'; T0.innerHTML='<div class="k" style="font-size:120px">ಮೊದಲು…</div><div class="e" style="font-size:64px">BEFORE THE RING</div>'; capsEl.appendChild(T0);
+const T1 = document.createElement('div'); T1.className='cap'; T1.style.top='430px'; T1.innerHTML='<div class="e" style="font-size:96px;letter-spacing:26px">TULUNADU</div><div class="k" style="font-size:150px">ತುಳುನಾಡು</div>'; capsEl.appendChild(T1);
+const clamp=(x,a,b)=>Math.min(b,Math.max(a,x)), lerp=(a,b,t)=>a+(b-a)*t, ease=t=>t*t*(3-2*t), eo=t=>1-Math.pow(1-t,3);
+let seed=1; const rnd=()=>{seed=(seed*1664525+1013904223)>>>0;return seed/4294967296;};
+const core=document.getElementById('core'), cx=core.getContext('2d');
+const grain=document.getElementById('grain'), gx=grain.getContext('2d');
+const gimg = gx.createImageData(270,480);
+const EMB=[]; (function(){let s=7;const r=()=>{s=(s*1664525+1013904223)>>>0;return s/4294967296;};for(let i=0;i<110;i++)EMB.push({x:r(),y:r(),v:.02+r()*.06,sw:r()*6,ph:r()*6.28,sz:1+r()*2.6,t0:r()*10});})();
+function drawCore(t, bright, radius){
+  cx.setTransform(1,0,0,1,0,0); cx.globalCompositeOperation='source-over';
+  cx.fillStyle='#050302'; cx.fillRect(0,0,540,960);
+  const fl = 1 + .06*Math.sin(t*31)+.04*Math.sin(t*17+1)+.03*Math.sin(t*53);
+  const R=radius*fl;
+  const g=cx.createRadialGradient(270,500,0,270,500,R*3.2);
+  g.addColorStop(0,'rgba(255,220,140,'+(.95*bright)+')'); g.addColorStop(.25,'rgba(255,140,40,'+(.55*bright)+')'); g.addColorStop(1,'rgba(40,10,0,0)');
+  cx.fillStyle=g; cx.fillRect(0,0,540,960);
+  cx.globalCompositeOperation='lighter';
+  const sway=Math.sin(t*9)*3*fl;
+  cx.fillStyle='rgba(255,170,60,'+(.85*bright)+')'; cx.beginPath(); cx.ellipse(270+sway*.5,500-R*.8,R*.55,R*1.5,0,0,6.283); cx.fill();
+  cx.fillStyle='rgba(255,236,190,'+bright+')'; cx.beginPath(); cx.ellipse(270+sway*.3,500-R*.55,R*.28,R*.85,0,0,6.283); cx.fill();
+  cx.globalCompositeOperation='source-over';
+  cx.fillStyle='rgba(120,70,20,'+bright+')'; cx.beginPath(); cx.ellipse(270,508+R*.05,60,16,0,0,6.283); cx.fill();
+  cx.fillStyle='rgba(200,130,40,'+bright+')'; cx.beginPath(); cx.ellipse(270,502+R*.05,58,10,0,0,6.283); cx.fill();
+  cx.globalCompositeOperation='lighter';
+  for(const e of EMB){ const yy=(1-((e.y+(t*e.v))%1)); const x=(e.x+Math.sin(t*.8+e.ph)*.04)*540, y=yy*960; cx.fillStyle='rgba(255,'+(140+e.sz*20|0)+',50,'+(.55*bright*Math.min(1,yy*1.6))+')'; cx.beginPath(); cx.arc(x,y,e.sz,0,6.283); cx.fill(); }
+}
+function setShot(s,t){
+  const p=clamp((t-s.t0)/(s.t1-s.t0),0,1);
+  const iw=s.im.naturalWidth||1000, ih=s.im.naturalHeight||1000;
+  const base=Math.max(1080/iw,1920/ih), sc=base*lerp(s.kb[0],s.kb[1],ease(p));
+  const punch = 1 + 0.05*Math.exp(-(t-s.t0)*9)*(s.t1-s.t0<=.6?1:.4);
+  const W=iw*sc*punch, H=ih*sc*punch;
+  const roomX=Math.max(0,(W-1080)/2), roomY=Math.max(0,(H-1920)/2);
+  const x=lerp(s.kb[2],s.kb[3],ease(p))*roomX, y=lerp(s.kb[4],s.kb[5],ease(p))*roomY;
+  s.im.style.width=W+'px'; s.im.style.height=H+'px'; s.im.style.transform='translate('+(-W/2+x)+'px,'+(-H/2+y)+'px)';
+}
+function render(t){
+  seed=12345;
+  const stage=document.getElementById('stage');
+  let coreB=1, coreR=lerp(4,44,eo(clamp(t/3.4,0,1)));
+  if(t>3.2) coreB=clamp(1-(t-3.2)/1.0,0,1);
+  if(t>=20.6){ coreB=ease(clamp((t-20.6)/1.2,0,1)); coreR=lerp(30,120,ease(clamp((t-20.6)/1.4,0,1))); }
+  drawCore(t,coreB,coreR);
+  for(const s of SHOTS){
+    let o=0;
+    if(t>=s.t0&&t<s.t1+.001){ const f=s.fade||0.06; o=Math.min(clamp((t-s.t0)/f,0,1), clamp((s.t1-t)/(s.fade?.4:.02),0,1)); if(s.t1-s.t0<=.6) o=1; }
+    s.el.style.opacity=o; if(o>0) setShot(s,t);
+  }
+  const first=SHOTS[0]; if(t>=3.2&&t<4.2){ const r=ease(clamp((t-3.2)/1.0,0,1))*1400; first.el.style.clipPath='circle('+r+'px at 540px 1000px)'; } else first.el.style.clipPath='none';
+  const last=SHOTS[SHOTS.length-1]; if(t>20.4){ last.el.style.opacity=clamp(1-(t-20.6)/1.0,0,1); }
+  let fl=0; if(t>=12&&t<20.4){ const ph=(t-12)%.5; fl=.30*Math.exp(-ph*16); } if(t>=8&&t<12){ const ph=(t-8)%1; fl=.10*Math.exp(-ph*10);} if(t>=3.2&&t<3.7) fl=.5*Math.exp(-(t-3.2)*8);
+  if(t>=21.9) fl=0;
+  document.getElementById('flash').style.opacity=fl;
+  for(const c of CAPS){ let o=clamp((t-c.t0)/.35,0,1)*clamp((c.t1-t)/.35,0,1); c.el.style.opacity=o; c.el.style.transform='translateY('+((1-eo(clamp((t-c.t0)/.6,0,1)))*30)+'px) scale('+(1+.02*(t-c.t0))+')'; }
+  T0.style.opacity=clamp((t-1.6)/.6,0,1)*clamp((3.3-t)/.4,0,1);
+  T1.style.opacity=clamp((t-20.9)/.45,0,1)*clamp((22.2-t)/.1,0,1);
+  document.getElementById('frame').style.opacity=(t>=4&&t<20.4)?.8:0;
+  const bh=lerp(300,0,ease(clamp((t-0.2)/3.6,0,1))); document.getElementById('bar1').style.height=bh+'px'; document.getElementById('bar2').style.height=bh+'px';
+  stage.style.opacity=clamp(t/0.5,0,1);
+  const d=gimg.data; for(let i=0;i<d.length;i+=4){const v=(rnd()*255)|0;d[i]=d[i+1]=d[i+2]=v;d[i+3]=255;} gx.putImageData(gimg,0,0);
+}
+function fit(){const sc=Math.min(innerWidth/1080,innerHeight/1920);document.getElementById('stage').style.transform='scale('+sc+')';}
+addEventListener('resize',fit);fit();
+window.__ready=()=>Promise.all(SHOTS.map(s=>s.im.decode().catch(()=>0)).concat([document.fonts.ready])).then(()=>true);
+window.__u=t=>{render(t);return true;};
+render(0);
+</script></body></html>
